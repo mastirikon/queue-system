@@ -2,17 +2,25 @@
 
 ## Быстрый деплой
 
-После внесения изменений в код:
+### Способ 1: Скрипт (рекомендуется)
 
 ```bash
-make deploy
+./deploy.sh
 ```
 
-**Вот и всё!** Система автоматически:
+**Вот и всё!** Скрипт автоматически:
 1. Соберёт бинарники для Linux
 2. Загрузит их на vdska
-3. Пересоберёт Docker образы
-4. Перезапустит сервисы
+3. Загрузит конфиги и .env
+4. Пересоберёт Docker образы
+5. Перезапустит сервисы
+6. Покажет статус
+
+### Способ 2: Makefile
+
+```bash
+make deploy-full
+```
 
 ---
 
@@ -94,7 +102,7 @@ make status-remote
 
 Или вручную:
 ```bash
-ssh root@vdska "docker compose -f docker-compose-simple.yml ps"
+ssh root@vdska "docker compose ps"
 ```
 
 ### Посмотреть логи
@@ -104,7 +112,7 @@ make logs-remote
 
 Или вручную:
 ```bash
-ssh root@vdska "docker compose -f docker-compose-simple.yml logs -f"
+ssh root@vdska "docker compose logs -f"
 ```
 
 ### Asynq Web UI
@@ -123,24 +131,24 @@ ssh root@vdska
 cd /home/finance-system/queue-system
 
 # Перезапустить только API
-docker compose -f docker-compose-simple.yml restart api
+docker compose restart api
 
 # Перезапустить только Worker
-docker compose -f docker-compose-simple.yml restart worker
+docker compose restart worker
 ```
 
 ### Остановить всё
 ```bash
 ssh root@vdska
 cd /home/finance-system/queue-system
-docker compose -f docker-compose-simple.yml down
+docker compose down
 ```
 
 ### Запустить заново
 ```bash
 ssh root@vdska
 cd /home/finance-system/queue-system
-docker compose -f docker-compose-simple.yml up -d
+docker compose up -d
 ```
 
 ### Посмотреть логи конкретного сервиса
@@ -148,9 +156,9 @@ docker compose -f docker-compose-simple.yml up -d
 ssh root@vdska
 cd /home/finance-system/queue-system
 
-docker compose -f docker-compose-simple.yml logs api
-docker compose -f docker-compose-simple.yml logs worker
-docker compose -f docker-compose-simple.yml logs redis
+docker compose logs api
+docker compose logs worker
+docker compose logs redis
 ```
 
 ---
@@ -168,8 +176,8 @@ make status-remote
 # Пересобери с нуля
 ssh root@vdska
 cd /home/finance-system/queue-system
-docker compose -f docker-compose-simple.yml down
-docker compose -f docker-compose-simple.yml up -d --build --force-recreate
+docker compose down
+docker compose up -d --build --force-recreate
 ```
 
 ### Изменения не применились
@@ -182,7 +190,7 @@ scp bin/worker-linux root@vdska:/home/finance-system/queue-system/bin/
 # Пересобери образы с нуля
 ssh root@vdska
 cd /home/finance-system/queue-system
-docker compose -f docker-compose-simple.yml up -d --build --force-recreate
+docker compose up -d --build --force-recreate
 ```
 
 ### Порты заняты

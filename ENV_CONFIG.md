@@ -70,7 +70,7 @@ cd /home/finance-system/queue-system
 nano .env
 
 # 3. Перезапускаешь сервисы
-docker compose -f docker-compose-simple.yml restart api worker
+docker compose restart api worker
 ```
 
 ---
@@ -187,11 +187,11 @@ WORKER_TARGET_URL=https://your-domain.com/endpoint
 
 ```bash
 # Перезапуск без пересборки (быстро)
-docker compose -f docker-compose-simple.yml restart api worker
+docker compose restart api worker
 
 # Или полная перезагрузка
-docker compose -f docker-compose-simple.yml down
-docker compose -f docker-compose-simple.yml up -d
+docker compose down
+docker compose up -d
 ```
 
 ---
@@ -213,13 +213,13 @@ docker compose -f docker-compose-simple.yml up -d
 docker exec queue-worker env | grep TARGET_URL
 
 # Если пусто - перезапусти с пересборкой
-docker compose -f docker-compose-simple.yml up -d --force-recreate
+docker compose up -d --force-recreate
 ```
 
 ### Неправильный URL?
 ```bash
 # Проверь логи при старте
-docker compose -f docker-compose-simple.yml logs api | grep TARGET
+docker compose logs api | grep TARGET
 ```
 
 ### Синтаксическая ошибка в .env?

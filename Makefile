@@ -17,16 +17,16 @@ run-worker: ## Запустить Worker локально
 	@go run ./cmd/worker
 
 docker-build: ## Собрать Docker образы
-	@docker-compose build
+	@docker compose build
 
 docker-up: ## Запустить все сервисы в Docker
-	@docker-compose up -d
+	@docker compose up -d
 
 docker-down: ## Остановить все сервисы
-	@docker-compose down
+	@docker compose down
 
 docker-logs: ## Посмотреть логи
-	@docker-compose logs -f
+	@docker compose logs -f
 
 docker-monitor: ## Открыть Asynq Web UI
 	@echo "Opening Asynq Monitor at http://localhost:8081"
@@ -43,25 +43,25 @@ deploy: build-linux ## Собрать и задеплоить на vdska
 	@scp bin/api-linux root@vdska:/home/finance-system/queue-system/bin/
 	@scp bin/worker-linux root@vdska:/home/finance-system/queue-system/bin/
 	@echo "Restarting services on vdska..."
-	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml up -d --build"
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose up -d --build"
 	@echo "✅ Deployed successfully!"
-	@echo "Check logs: ssh root@vdska 'docker compose -f docker-compose-simple.yml logs -f'"
+	@echo "Check logs: ssh root@vdska 'docker compose logs -f'"
 
 deploy-full: build-linux ## Задеплоить всё (включая конфиги)
 	@echo "Uploading everything to vdska..."
 	@scp bin/api-linux root@vdska:/home/finance-system/queue-system/bin/
 	@scp bin/worker-linux root@vdska:/home/finance-system/queue-system/bin/
-	@scp docker-compose-simple.yml root@vdska:/home/finance-system/queue-system/
+	@scp docker-compose.yml root@vdska:/home/finance-system/queue-system/
 	@scp .env.production root@vdska:/home/finance-system/queue-system/.env
 	@echo "Restarting services on vdska..."
-	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml up -d --build"
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose up -d --build"
 	@echo "✅ Deployed successfully!"
 
 logs-remote: ## Посмотреть логи на vdska
-	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml logs -f"
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose logs -f"
 
 status-remote: ## Проверить статус на vdska
-	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml ps"
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose ps"
 
 test: ## Запустить тесты
 	@go test -v ./...
