@@ -224,9 +224,11 @@ ssh root@vdska 'cd /home/finance-system/queue-system && docker compose logs -f'
 | `ENV` | Окружение (development/production) | development |
 | `API_PORT` | Порт API сервера | 8080 |
 | `REDIS_ADDR` | Адрес Redis | localhost:6379 |
-| `WORKER_CONCURRENCY` | Количество worker'ов | 10 |
+| `WORKER_CONCURRENCY` | Количество worker'ов (1 = последовательно) | 10 |
 | `WORKER_RETRY_INTERVAL` | Интервал retry | 10s |
 | `WORKER_REQUEST_TIMEOUT` | Таймаут HTTP запроса | 30s |
+| `WORKER_DELAY_BETWEEN_TASK` | Задержка между задачами (0s = без задержки) | 0s |
+| `WORKER_TARGET_URL` | URL для отправки уведомлений | https://... |
 
 ## 🔧 Требования
 

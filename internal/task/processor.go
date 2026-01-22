@@ -16,14 +16,16 @@ import (
 
 // Processor обрабатывает задачи из очереди
 type Processor struct {
-	logger     *zap.Logger
-	httpClient *http.Client
+	logger           *zap.Logger
+	httpClient       *http.Client
+	delayBetweenTask time.Duration
 }
 
 // NewProcessor создаёт новый процессор задач
-func NewProcessor(logger *zap.Logger, timeout time.Duration) *Processor {
+func NewProcessor(logger *zap.Logger, timeout time.Duration, delayBetweenTask time.Duration) *Processor {
 	return &Processor{
-		logger: logger,
+		logger:           logger,
+		delayBetweenTask: delayBetweenTask,
 		httpClient: &http.Client{
 			Timeout: timeout,
 		},
@@ -93,6 +95,15 @@ func (p *Processor) ProcessHTTPRequest(ctx context.Context, t *asynq.Task) error
 			zap.Int("status_code", resp.StatusCode),
 			zap.String("response", string(respBody)),
 		)
+		
+		// Задержка между задачами (если настроена)
+		if p.delayBetweenTask > 0 {
+			p.logger.Debug("Waiting before next task",
+				zap.Duration("delay", p.delayBetweenTask),
+			)
+			time.Sleep(p.delayBetweenTask)
+		}
+		
 		return nil // Задача успешно выполнена
 	}
 

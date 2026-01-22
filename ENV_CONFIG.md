@@ -36,6 +36,7 @@ WORKER_CONCURRENCY=10             # Количество одновременн�
 WORKER_RETRY_INTERVAL=10s         # Интервал между retry
 WORKER_MAX_RETRIES=8640           # Макс. попыток (24 часа при 10s)
 WORKER_REQUEST_TIMEOUT=30s        # Таймаут HTTP запроса
+WORKER_DELAY_BETWEEN_TASK=0s      # Задержка между задачами (0s = без задержки)
 ```
 
 ### Target URL (главное!)
@@ -82,6 +83,20 @@ docker compose restart api worker
 WORKER_CONCURRENCY=50
 WORKER_RETRY_INTERVAL=5s
 WORKER_REQUEST_TIMEOUT=60s
+WORKER_DELAY_BETWEEN_TASK=0s
+```
+
+### Последовательное выполнение (одна задача за раз)
+```bash
+WORKER_CONCURRENCY=1
+WORKER_DELAY_BETWEEN_TASK=0s
+```
+
+### Последовательное с задержкой (щадящий режим для API)
+```bash
+WORKER_CONCURRENCY=1
+WORKER_DELAY_BETWEEN_TASK=2s      # 2 секунды между задачами
+WORKER_REQUEST_TIMEOUT=30s
 ```
 
 ### Экономия ресурсов
@@ -89,12 +104,7 @@ WORKER_REQUEST_TIMEOUT=60s
 WORKER_CONCURRENCY=5
 WORKER_RETRY_INTERVAL=30s
 WORKER_REQUEST_TIMEOUT=20s
-```
-
-### Быстрый retry
-```bash
-WORKER_RETRY_INTERVAL=5s
-WORKER_MAX_RETRIES=17280    # 24 часа при 5s интервале
+WORKER_DELAY_BETWEEN_TASK=0s
 ```
 
 ---

@@ -30,11 +30,12 @@ type APIConfig struct {
 
 // WorkerConfig — настройки Worker сервиса
 type WorkerConfig struct {
-	Concurrency    int           `env:"CONCURRENCY" envDefault:"10"`
-	RetryInterval  time.Duration `env:"RETRY_INTERVAL" envDefault:"10s"`
-	MaxRetries     int           `env:"MAX_RETRIES" envDefault:"8640"` // 24 часа при 10 сек интервале
-	RequestTimeout time.Duration `env:"REQUEST_TIMEOUT" envDefault:"30s"`
-	TargetURL      string        `env:"TARGET_URL" envDefault:"https://tasker-google-sheets.ku-34.netcraze.pro/notify"`
+	Concurrency      int           `env:"CONCURRENCY" envDefault:"10"`
+	RetryInterval    time.Duration `env:"RETRY_INTERVAL" envDefault:"10s"`
+	MaxRetries       int           `env:"MAX_RETRIES" envDefault:"8640"` // 24 часа при 10 сек интервале
+	RequestTimeout   time.Duration `env:"REQUEST_TIMEOUT" envDefault:"30s"`
+	TargetURL        string        `env:"TARGET_URL" envDefault:"https://tasker-google-sheets.ku-34.netcraze.pro/notify"`
+	DelayBetweenTask time.Duration `env:"DELAY_BETWEEN_TASK" envDefault:"1s"` // Задержка между задачами
 }
 
 // RedisConfig — настройки Redis

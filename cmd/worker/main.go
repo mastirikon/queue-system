@@ -53,8 +53,8 @@ func main() {
 		},
 	)
 
-	// Создаём процессор задач
-	processor := task.NewProcessor(log, cfg.Worker.RequestTimeout)
+	// Создаём процессор задач с задержкой между задачами
+	processor := task.NewProcessor(log, cfg.Worker.RequestTimeout, cfg.Worker.DelayBetweenTask)
 
 	// Регистрируем обработчики
 	mux := asynq.NewServeMux()
