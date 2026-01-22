@@ -32,6 +32,37 @@ docker-monitor: ## Открыть Asynq Web UI
 	@echo "Opening Asynq Monitor at http://localhost:8081"
 	@open http://localhost:8081 2>/dev/null || xdg-open http://localhost:8081 2>/dev/null || echo "Open http://localhost:8081 in your browser"
 
+build-linux: ## Собрать бинарники для Linux (vdska)
+	@echo "Building for Linux..."
+	@GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/api-linux ./cmd/api
+	@GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/worker-linux ./cmd/worker
+	@echo "Done! Binaries: bin/api-linux, bin/worker-linux"
+
+deploy: build-linux ## Собрать и задеплоить на vdska
+	@echo "Uploading to vdska..."
+	@scp bin/api-linux root@vdska:/home/finance-system/queue-system/bin/
+	@scp bin/worker-linux root@vdska:/home/finance-system/queue-system/bin/
+	@echo "Restarting services on vdska..."
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml up -d --build"
+	@echo "✅ Deployed successfully!"
+	@echo "Check logs: ssh root@vdska 'docker compose -f docker-compose-simple.yml logs -f'"
+
+deploy-full: build-linux ## Задеплоить всё (включая конфиги)
+	@echo "Uploading everything to vdska..."
+	@scp bin/api-linux root@vdska:/home/finance-system/queue-system/bin/
+	@scp bin/worker-linux root@vdska:/home/finance-system/queue-system/bin/
+	@scp docker-compose-simple.yml root@vdska:/home/finance-system/queue-system/
+	@scp .env.production root@vdska:/home/finance-system/queue-system/.env
+	@echo "Restarting services on vdska..."
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml up -d --build"
+	@echo "✅ Deployed successfully!"
+
+logs-remote: ## Посмотреть логи на vdska
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml logs -f"
+
+status-remote: ## Проверить статус на vdska
+	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose -f docker-compose-simple.yml ps"
+
 test: ## Запустить тесты
 	@go test -v ./...
 

@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
 	"time"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/mastirikon/queue-system/internal/domain"
@@ -15,15 +15,15 @@ import (
 type TaskHandler struct {
 	queueClient *queue.Client
 	logger      *zap.Logger
-	validator   *validator.Validate
+	targetURL   string
 }
 
 // NewTaskHandler создаёт новый TaskHandler
-func NewTaskHandler(queueClient *queue.Client, logger *zap.Logger) *TaskHandler {
+func NewTaskHandler(queueClient *queue.Client, logger *zap.Logger, targetURL string) *TaskHandler {
 	return &TaskHandler{
 		queueClient: queueClient,
 		logger:      logger,
-		validator:   validator.New(),
+		targetURL:   targetURL,
 	}
 }
 
@@ -41,26 +41,32 @@ func (h *TaskHandler) CreateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	// Валидация
-	if err := h.validator.Struct(&req); err != nil {
-		h.logger.Warn("Request validation failed",
+	// Сериализуем данные в JSON для отправки
+	bodyBytes, err := json.Marshal(req)
+	if err != nil {
+		h.logger.Error("Failed to marshal request body",
 			zap.Error(err),
 		)
-		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
-			Error:   "validation_error",
-			Message: err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{
+			Error:   "serialization_error",
+			Message: "Failed to serialize request",
 		})
 	}
 
-	// Создаём задачу
+	// Создаём задачу с фиксированным URL из конфига
 	task := &domain.Task{
 		ID:        uuid.New().String(),
-		URL:       req.URL,
-		Method:    req.Method,
-		Headers:   req.Headers,
-		Body:      req.Body,
+		URL:       h.targetURL,
+		Method:    "POST",
+		Headers:   map[string]string{"Content-Type": "application/json"},
+		Body:      string(bodyBytes),
 		CreatedAt: time.Now(),
 	}
+
+	h.logger.Info("Creating task",
+		zap.String("task_id", task.ID),
+		zap.String("target_url", task.URL),
+	)
 
 	// Отправляем в очередь
 	if err := h.queueClient.EnqueueTask(c.Context(), task); err != nil {

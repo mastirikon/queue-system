@@ -1,23 +1,17 @@
-# Binaries for programs and plugins
+# Binaries
+bin/
 *.exe
-*.exe~
 *.dll
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+# Test binary
 *.test
 
 # Output of the go coverage tool
 *.out
 
-# Go workspace file
-go.work
-
-# Dependency directories
-vendor/
-
-# Environment variables
+# Environment files
 .env
 .env.local
 .env.*.local
@@ -33,13 +27,9 @@ vendor/
 .DS_Store
 Thumbs.db
 
-# Build output
-/bin/
-/dist/
-
 # Logs
 *.log
-logs/
 
-# Docker
-*.pid
+# Temporary files
+tmp/
+temp/

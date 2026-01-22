@@ -34,6 +34,7 @@ type WorkerConfig struct {
 	RetryInterval  time.Duration `env:"RETRY_INTERVAL" envDefault:"10s"`
 	MaxRetries     int           `env:"MAX_RETRIES" envDefault:"8640"` // 24 часа при 10 сек интервале
 	RequestTimeout time.Duration `env:"REQUEST_TIMEOUT" envDefault:"30s"`
+	TargetURL      string        `env:"TARGET_URL" envDefault:"https://tasker-google-sheets.ku-34.netcraze.pro/notify"`
 }
 
 // RedisConfig — настройки Redis

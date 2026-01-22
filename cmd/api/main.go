@@ -63,8 +63,8 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
-	// Создаём handler
-	taskHandler := handler.NewTaskHandler(queueClient, log)
+	// Создаём handler с фиксированным URL из конфига
+	taskHandler := handler.NewTaskHandler(queueClient, log, cfg.Worker.TargetURL)
 
 	// Роутинг
 	api := app.Group("/api/v1")

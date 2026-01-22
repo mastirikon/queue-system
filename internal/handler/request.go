@@ -1,9 +1,13 @@
 package handler
 
-// CreateTaskRequest — запрос на создание задачи
+// CreateTaskRequest — упрощённый запрос (только данные уведомления)
 type CreateTaskRequest struct {
-	URL     string            `json:"url" validate:"required,url"`
-	Method  string            `json:"method" validate:"required,oneof=GET POST PUT DELETE PATCH"`
-	Headers map[string]string `json:"headers"`
-	Body    string            `json:"body"`
+	OwnerApp  string `json:"owner_app"`
+	Title     string `json:"title"`
+	Text      string `json:"text"`
+	Subtext   string `json:"subtext"`
+	Messages  string `json:"messages"`
+	OtherText string `json:"other_text"`
+	Cat       string `json:"cat"`
+	NewOnly   string `json:"new_only"`
 }
