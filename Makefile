@@ -28,6 +28,10 @@ docker-down: ## Остановить все сервисы
 docker-logs: ## Посмотреть логи
 	@docker-compose logs -f
 
+docker-monitor: ## Открыть Asynq Web UI
+	@echo "Opening Asynq Monitor at http://localhost:8081"
+	@open http://localhost:8081 2>/dev/null || xdg-open http://localhost:8081 2>/dev/null || echo "Open http://localhost:8081 in your browser"
+
 test: ## Запустить тесты
 	@go test -v ./...
 
