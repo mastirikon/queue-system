@@ -38,11 +38,14 @@ scp bin/worker-linux root@vdska:/home/finance-system/queue-system/bin/
 echo -e "${GREEN}✅ Бинарники загружены${NC}"
 echo ""
 
-# Шаг 3: Загрузка конфигураций
-echo -e "${YELLOW}📤 Шаг 3/5: Загрузка конфигураций...${NC}"
+# Шаг 3: Загрузка конфигураций, Dockerfile'ов и .dockerignore
+echo -e "${YELLOW}📤 Шаг 3/5: Загрузка конфигураций и Dockerfile'ов...${NC}"
 scp docker-compose.yml root@vdska:/home/finance-system/queue-system/
 scp .env.production root@vdska:/home/finance-system/queue-system/.env
-echo -e "${GREEN}✅ Конфигурации загружены${NC}"
+scp .dockerignore root@vdska:/home/finance-system/queue-system/
+scp docker/api.Dockerfile root@vdska:/home/finance-system/queue-system/docker/
+scp docker/worker.Dockerfile root@vdska:/home/finance-system/queue-system/docker/
+echo -e "${GREEN}✅ Конфигурации и Dockerfile'ы загружены${NC}"
 echo ""
 
 # Шаг 4: Перезапуск сервисов

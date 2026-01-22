@@ -1,5 +1,6 @@
-# Binaries
-bin/
+# Binaries (игнорируем только Mac версии, Linux нужны!)
+bin/api
+bin/worker
 *.exe
 *.dll
 *.so

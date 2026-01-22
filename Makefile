@@ -53,6 +53,9 @@ deploy-full: build-linux ## Задеплоить всё (включая конф
 	@scp bin/worker-linux root@vdska:/home/finance-system/queue-system/bin/
 	@scp docker-compose.yml root@vdska:/home/finance-system/queue-system/
 	@scp .env.production root@vdska:/home/finance-system/queue-system/.env
+	@scp .dockerignore root@vdska:/home/finance-system/queue-system/
+	@scp docker/api.Dockerfile root@vdska:/home/finance-system/queue-system/docker/
+	@scp docker/worker.Dockerfile root@vdska:/home/finance-system/queue-system/docker/
 	@echo "Restarting services on vdska..."
 	@ssh root@vdska "cd /home/finance-system/queue-system && docker compose up -d --build"
 	@echo "✅ Deployed successfully!"
